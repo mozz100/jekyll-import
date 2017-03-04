@@ -18,9 +18,15 @@ module JekyllImport
                        n.created,
                        n.status,
                        n.type,
-                       (SELECT GROUP_CONCAT(td.name SEPARATOR '|') FROM taxonomy_term_data td, taxonomy_index ti WHERE ti.tid = td.tid AND ti.nid = n.nid) AS 'tags'
+                       (SELECT GROUP_CONCAT(td.name SEPARATOR '|') FROM taxonomy_term_data td, taxonomy_index ti WHERE ti.tid = td.tid AND ti.nid = n.nid) AS 'tags',
+                       fm.uri AS 'image1uri',
+                       fm2.uri AS 'image2uri'
                 FROM #{prefix}node AS n
                 LEFT JOIN #{prefix}field_data_body AS fdb ON fdb.entity_id = n.nid AND fdb.entity_type = 'node'
+                LEFT JOIN #{prefix}field_data_field_image AS fdfi ON fdfi.entity_id = n.nid and fdfi.entity_type = 'node'
+                LEFT JOIN #{prefix}file_managed AS fm on fm.fid = fdfi.field_image_fid
+                LEFT JOIN #{prefix}field_data_field_image2 AS fdfi2 ON fdfi2.entity_id = n.nid and fdfi2.entity_type = 'node'
+                LEFT JOIN #{prefix}file_managed AS fm2 on fm2.fid = fdfi2.field_image2_fid
                 WHERE (#{types})
 EOS
 
@@ -35,10 +41,14 @@ EOS
         content = sql_post_data[:body_value].to_s
         summary = sql_post_data[:body_summary].to_s
         tags = (sql_post_data[:tags] || '').downcase.strip
+        image1 = sql_post_data[:image1uri].to_s
+        image2 = sql_post_data[:image2uri].to_s
 
         data = {
           'excerpt' => summary,
-          'categories' => tags.split('|')
+          'categories' => tags.split('|'),
+          'image1' => image1,
+          'image2' => image2,
         }
 
         return data, content
