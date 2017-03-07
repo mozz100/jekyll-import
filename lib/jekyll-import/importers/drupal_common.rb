@@ -55,7 +55,8 @@ module JekyllImport
           dirs = {
               :_posts   => File.join(src_dir, '_posts').to_s,
               :_drafts  => File.join(src_dir, '_drafts').to_s,
-              :_layouts => Jekyll.sanitized_path(src_dir, conf['layouts_dir'].to_s)
+              :_layouts => Jekyll.sanitized_path(src_dir, conf['layouts_dir'].to_s),
+              :_images  => File.join(src_dir, '_images').to_s,
           }
 
           dirs.each do |key, dir|
@@ -103,6 +104,18 @@ HTML
               f.puts content
             end
 
+            # copy image files if any
+            if data['images']
+
+              data['images'].each do |path|
+                puts path
+                existing_path = File.join(src_dir, 'files', path).to_s
+                new_path      = File.join(dirs[:_images], path).to_s
+                FileUtils.mkdir_p File.dirname(new_path)
+                # File.symlink existing_path, new_path        # do a symlink
+                FileUtils.copy_file(existing_path, new_path)  # do a copy
+              end
+            end
 
             # Make a file to redirect from the old Drupal URL
             if is_published
