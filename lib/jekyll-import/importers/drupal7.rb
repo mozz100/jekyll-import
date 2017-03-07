@@ -41,14 +41,17 @@ EOS
         content = sql_post_data[:body_value].to_s
         summary = sql_post_data[:body_summary].to_s
         tags = (sql_post_data[:tags] || '').downcase.strip
+        images = []
         image1 = sql_post_data[:image1uri].to_s
         image2 = sql_post_data[:image2uri].to_s
+        images.push(image1.gsub('public://', '')) if image1.length > 0
+        images.push(image2.gsub('public://', '')) if image2.length > 0
 
         data = {
           'excerpt' => summary,
           'categories' => tags.split('|'),
-          'image1' => image1,
-          'image2' => image2,
+          'images' => images,
+          
         }
 
         return data, content
