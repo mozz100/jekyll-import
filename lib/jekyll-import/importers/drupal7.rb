@@ -44,8 +44,8 @@ EOS
         images = []
         image1 = sql_post_data[:image1uri].to_s
         image2 = sql_post_data[:image2uri].to_s
-        images.push(image1.gsub('public://', '')) if image1.length > 0
-        images.push(image2.gsub('public://', '')) if image2.length > 0
+        images.push('old/' + image1.gsub('public://', '')) if image1.length > 0
+        images.push('old/' + image2.gsub('public://', '')) if image2.length > 0
 
         data = {
           'excerpt' => summary,
