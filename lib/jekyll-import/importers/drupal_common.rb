@@ -95,6 +95,9 @@ HTML
             node_id = post[:nid]
             dir = is_published ? dirs[:_posts] : dirs[:_drafts]
             slug = title.strip.downcase.gsub(/(&|&amp;)/, ' and ').gsub(/[\s\.\/\\]/, '-').gsub(/[^\w-]/, '').gsub(/[-_]{2,}/, '-').gsub(/^[-_]/, '').gsub(/[-_]$/, '')
+            if post[:alias].length > 0
+              slug = post[:alias].gsub 'mnemozzyne/', ''
+            end
             filename = Time.at(time).to_datetime.strftime('%Y-%m-%d-') + slug + '.html.markdown'
 
             # Write out the data and content to file

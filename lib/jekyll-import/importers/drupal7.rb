@@ -20,13 +20,15 @@ module JekyllImport
                        n.type,
                        (SELECT GROUP_CONCAT(td.name SEPARATOR '|') FROM taxonomy_term_data td, taxonomy_index ti WHERE ti.tid = td.tid AND ti.nid = n.nid) AS 'tags',
                        fm.uri AS 'image1uri',
-                       fm2.uri AS 'image2uri'
+                       fm2.uri AS 'image2uri',
+                       ua.alias AS 'alias'
                 FROM #{prefix}node AS n
                 LEFT JOIN #{prefix}field_data_body AS fdb ON fdb.entity_id = n.nid AND fdb.entity_type = 'node'
                 LEFT JOIN #{prefix}field_data_field_image AS fdfi ON fdfi.entity_id = n.nid and fdfi.entity_type = 'node'
                 LEFT JOIN #{prefix}file_managed AS fm on fm.fid = fdfi.field_image_fid
                 LEFT JOIN #{prefix}field_data_field_image2 AS fdfi2 ON fdfi2.entity_id = n.nid and fdfi2.entity_type = 'node'
                 LEFT JOIN #{prefix}file_managed AS fm2 on fm2.fid = fdfi2.field_image2_fid
+                LEFT JOIN #{prefix}url_alias AS ua on ua.source = CONCAT('node/', n.nid)
                 WHERE (#{types})
 EOS
 
