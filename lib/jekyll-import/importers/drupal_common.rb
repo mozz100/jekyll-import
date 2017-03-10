@@ -96,9 +96,19 @@ HTML
             dir = is_published ? dirs[:_posts] : dirs[:_drafts]
             slug = title.strip.downcase.gsub(/(&|&amp;)/, ' and ').gsub(/[\s\.\/\\]/, '-').gsub(/[^\w-]/, '').gsub(/[-_]{2,}/, '-').gsub(/^[-_]/, '').gsub(/[-_]$/, '')
             if post[:alias].length > 0
+              raise 'unexpected' unless post[:alias].start_with? 'mnemozzyne'
               slug = post[:alias].gsub 'mnemozzyne/', ''
+            else
+              raise 'erk: no alias for article'
             end
+
             filename = Time.at(time).to_datetime.strftime('%Y-%m-%d-') + slug + '.html.markdown'
+
+            # Generate url map from old to new.  Good place to put this would be
+            # source/middleman/.htaccess
+            old_url = slug #'/' + post[:alias]
+            new_url = Time.at(time).to_datetime.strftime('%Y/%m/%d/') + slug + '/'
+            puts "#{old_url} --> #{new_url}"
 
             # Write out the data and content to file
             File.open("#{dir}/#{filename}", 'w') do |f|
