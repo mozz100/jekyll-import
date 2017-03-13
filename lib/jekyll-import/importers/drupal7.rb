@@ -51,7 +51,7 @@ EOS
 
         data = {
           'excerpt' => summary,
-          'categories' => tags.split('|'),
+          'tags' => tags.split('|'),
           'images' => images,
           
         }
