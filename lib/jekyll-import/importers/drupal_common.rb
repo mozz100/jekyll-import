@@ -102,7 +102,7 @@ HTML
               raise 'erk: no alias for article'
             end
 
-            filename = Time.at(time).to_datetime.strftime('%Y-%m-%d-') + slug + '.html.markdown'
+            filename = Time.at(time).to_datetime.strftime('%Y/%Y-%m-%d-') + slug + '.html.markdown'
 
             # Generate url map from old to new.  Good place to put this would be
             # source/middleman/.htaccess
@@ -111,6 +111,7 @@ HTML
             puts "#{old_url} --> #{new_url}"
 
             # Write out the data and content to file
+            FileUtils.mkdir_p File.dirname("#{dir}/#{filename}")
             File.open("#{dir}/#{filename}", 'w') do |f|
               f.puts data.to_yaml
               f.puts '---'
