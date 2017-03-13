@@ -150,6 +150,19 @@ HTML
               end
             end
           end
+
+          # Handle other redirects. Ignore 301s that point to themselves...
+          query2 = <<EOS
+                SELECT redirect.source, ua.alias as dest
+                FROM redirect
+                INNER JOIN url_alias ua ON ua.source = redirect.redirect
+                    AND ua.alias <> redirect.source
+                WHERE redirect.type = 'redirect';
+EOS
+
+          db[query2].each do |redirect|
+            puts "#{redirect[:source]} --> #{redirect[:dest]}"
+          end
         end
       end
 
