@@ -126,7 +126,7 @@ HTML
                 new_path      = File.join(dirs[:_images], actual_path).to_s
                 FileUtils.mkdir_p File.dirname(new_path)
                 # File.symlink existing_path, new_path        # do a symlink
-                FileUtils.copy_file(existing_path, new_path)  # do a copy
+                FileUtils.copy_file(existing_path, new_path) if ENV["COPY_IMAGES"]  # do a copy
               end
             end
 
