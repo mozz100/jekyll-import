@@ -56,6 +56,10 @@ EOS
           
         }
 
+        if [213, 102, 96, 87, 77, 46].include? sql_post_data[:nid]
+          data['is_fave'] = true
+        end
+
         return data, content
       end
 
